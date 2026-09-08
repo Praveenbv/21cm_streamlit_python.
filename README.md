@@ -1,12 +1,12 @@
-21cm Hydrogen Line using pyhton
+21cm Hydrogen Line using Python
 
-*Two scripts I use for amateur radio astronomy - listening to the 21cm hydrogen line with an RTL-SDR and horn antenna, and eventually turning a bunch of those readings into a sky map.
+Scripts used for radio astronomy.
 
-tangent21.py
+*************tangent21.py*************
 
 *The one you run while the antenna is pointed at the sky. Launch it with:
 
-streamlit run tangent21.py
+"""""streamlit run tangent21.py"""""
 
 
 >>Streamlit app, so it runs in the browser
@@ -21,50 +21,59 @@ streamlit run tangent21.py
 >>Can run multiple trials per session
 >>Has an auto-refresh option for the sidebar coordinates
 
-
-sky_map_plotter_with_summery_data.py
-
-to run this use below comannd
-
-python sky_map_plotter_with_summery_data.py
+>>>> By default, the location coordinates are set to the Gauribidanur Radio Observatory itself.
+>>>> It can be changed in the code function called
 
 
-Looks for a zip named gbd_horn_All_drift_scan_data_summary.zip and extracts it
-Falls back to globbing for *summary*.csv files if there's no zip
-Combines all the RA/Dec/signal power data
-Interpolates it onto a grid with griddata
-Runs a destriping step - lines up each declination row to a common background level, gets rid of the horizontal banding and bright zenith bump that drift scans tend to leave
-Smooths with a Gaussian filter
-Plots the result with pcolormesh, full 360 degrees of RA
+"""""""""""""""""""
+
+************************display_realtime_coordinates(alt_key="alt_slider", az_key="az_slider", show_sidebar=True):
+    # Gauribidanur Radio Observatory coordinates
+    latitude = 13.6029     # degrees North
+    longitude = 77.4390    # degrees East
+    elevation = 686.0      # meters...........................................................**********************************
 
 
-requirements
+                                                                                         """"""""""""""""""""""""""""""
+
+**********sky_map_plotter_with_summery_data.py***************
+
+To run this, use the command below comannd
+
+>>python sky_map_plotter_with_summery_data.py
+
+
+>>Looks for a zip named gbd_horn_All_drift_scan_data_summary.zip and extracts it
+>>Falls back to globbing for *summary*.csv files if there's no zip
+>>Combines all the RA/Dec/signal power data
+>>Interpolates it onto a grid with griddata
+>>Runs a destriping step - lines up each declination row to a common background level, gets rid of the horizontal banding and bright zenith bump that from drift scan
+>>Smooths with a Gaussian filter
+>>Plots the result with pcolormesh, full 360 degrees of RA
+
+
+***********requirements**********
 
 pip install streamlit numpy matplotlib scipy pandas astropy pyrtlsdr
 
 
-An RTL-SDR dongle
-An antenna that can pick up 1420 MHz (horn antenna is the usual choice)
-librtlsdr installed on your system, or pyrtlsdr has nothing to talk to
+**An RTL-SDR dongle
+**An antenna that can pick up 1420 MHz (horn antenna is the usual choice)
+**librtlsdr installed on your system, or pyrtlsdr has nothing to talk to
 
 
-quick note on the tangent point method
+***quick note on the tangent point method***
 
-Looking along a line of sight into the inner galaxy (galactic longitude between 0 and 90 degrees), there's a point - the tangent point - which is as close as that line ever gets to the galactic center. Gas there has the highest radial velocity of anything along that sightline, which is what makes it useful:
+Looking along a line of sight into the inner galaxy (galactic longitude between 0 and 90 degrees), there's a point - the tangent point - which is as close as that line ever gets to the galactic centre. Gas there has the highest radial velocity of anything along that sightline, which is what makes it useful:
 
 
 Distance: R = R0 * sin(L)
 Rotation velocity: V_rot = Vr + V0 * sin(L)
-R0 (8.5 kpc) and V0 (220 km/s) are the assumed distance and orbital speed of the sun around the galactic center
-Vr comes from the doppler shift measured on the line itself
+R0 (8.5 kpc) and V0 (220 km/s) are the assumed distance and orbital speed of the Sun around the Galactic Centre
+Vr comes from the Doppler shift measured on the line itself
 
-
-things that could be better
-
-
-Peak finding is just argmax on the difference spectrum - fine for a strong clean signal, not great once things get noisy (proper edge detection would help)
+Peak finding is just argmax on the difference spectrum - fine for a strong, clean signal, not great once things get noisy 
 Destriping only handles horizontal banding, not anything RA-dependent
 There's a workaround for st.experimental_rerun since Streamlit deprecated it - should switch to st.rerun() at some point
-Observatory coordinates and the hydrogen rest frequency are hardcoded constants near the top of the files, not pulled from a config - keep that in mind if you fork this for a different site
-
-note: antenna pointing and enterning co-ordinates in streamlit web page is very important , if this is worng verything goes wrong.
+Observatory coordinates and the hydrogen rest frequency are  constants near the top of the files.
+*****note****: Antenna pointing and entering coordinates in the Streamlit web page is very important; if this is wrong, everything goes wrong.
